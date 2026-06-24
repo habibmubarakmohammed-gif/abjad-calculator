@@ -1,78 +1,71 @@
-<!DOCTYPE html>
+DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MUBARAK ABJAD SHAIKH</title>
-
-<!-- PLACE YOUR CSS HERE -->
-<!-- This document contains a starter upgraded version.
-Add further features such as PDF export, WhatsApp sharing,
-progress pages and sound effects as needed. -->
-
+<title>MUBARAK ABJAD SHAIKH - Version 1</title>
+<style>
+body{font-family:Arial,sans-serif;background:#111;color:#fff;margin:0;padding:20px}
+.container{max-width:900px;margin:auto}
+input,button{padding:10px;margin:5px;width:100%}
+.card{background:#222;padding:15px;border-radius:10px;margin-top:15px}
+</style>
 </head>
 <body>
-
+<div class="container">
 <h1>MUBARAK ABJAD SHAIKH</h1>
-<p>Contact: habibmubarakmohammed@gmail.com</p>
 
 <input id="name" placeholder="Enter Name">
-<input id="mother" placeholder="Mother Name">
+<input id="mother" placeholder="Enter Mother Name">
 
 <button onclick="calculate()">Calculate</button>
+<button onclick="saveResult()">Save Result</button>
+<button onclick="window.print()">Print</button>
 
-<div id="result"></div>
+<div id="result" class="card"></div>
+<div id="history" class="card"></div>
+</div>
 
 <script>
-
-const abjad = {
-ا:1,ب:2,ج:3,د:4,ه:5,و:6,ز:7,ح:8,ط:9,
-ي:10,ك:20,ل:30,م:40,ن:50,س:60,ع:70,
-ف:80,ص:90,ق:100,ر:200,ش:300,ت:400,
-ث:500,خ:600,ذ:700,ض:800,ظ:900,غ:1000
+const abjad={
+'ا':1,'ب':2,'ج':3,'د':4,'ه':5,'و':6,'ز':7,'ح':8,'ط':9,
+'ي':10,'ك':20,'ل':30,'م':40,'ن':50,'س':60,'ع':70,
+'ف':80,'ص':90,'ق':100,'ر':200,'ش':300,'ت':400,
+'ث':500,'خ':600,'ذ':700,'ض':800,'ظ':900,'غ':1000
 };
-
-const englishMap = {
-a:"ا", b:"ب", c:"ك", d:"د", e:"ا",
-f:"ف", g:"ج", h:"ه", i:"ي", j:"ج",
-k:"ك", l:"ل", m:"م", n:"ن", o:"و",
-p:"ب", q:"ق", r:"ر", s:"س", t:"ت",
-u:"و", v:"ف", w:"و", x:"كس", y:"ي", z:"ز"
-};
-
-function convertEnglishToArabic(text){
- let result="";
- for(let ch of text.toLowerCase()){
-   result += englishMap[ch] || "";
- }
- return result;
-}
 
 function calcWord(word){
- if(/[a-zA-Z]/.test(word)){
-   word = convertEnglishToArabic(word);
- }
  let sum=0;
- for(let ch of word){
-   sum += abjad[ch] || 0;
- }
+ for(let c of word){ sum += abjad[c] || 0; }
  return sum;
 }
 
 function calculate(){
- let nameVal = calcWord(document.getElementById("name").value);
- let motherVal = calcWord(document.getElementById("mother").value);
- let combined = nameVal + motherVal;
+ let n=document.getElementById('name').value;
+ let m=document.getElementById('mother').value;
+ let total=calcWord(n)+calcWord(m);
 
- document.getElementById("result").innerHTML = `
- <div>Name Value: ${nameVal}</div>
- <div>Mother Value: ${motherVal}</div>
- <div>Combined Value: ${combined}</div>
- <div>🔒 Advanced Interpretation Locked</div>
- <div>Contact: habibmubarakmohammed@gmail.com</div>`;
+ document.getElementById('result').innerHTML=
+ '<h3>Result</h3>'+
+ '<p>Name Value: '+calcWord(n)+'</p>'+
+ '<p>Mother Value: '+calcWord(m)+'</p>'+
+ '<p>Total: '+total+'</p>';
 }
 
-</script>
+function saveResult(){
+ let data=document.getElementById('result').innerText;
+ localStorage.setItem('abjad_last',data);
+ loadHistory();
+}
 
+function loadHistory(){
+ document.getElementById('history').innerHTML =
+ '<h3>Saved Result</h3><pre>' +
+ (localStorage.getItem('abjad_last')||'No saved result') +
+ '</pre>';
+}
+
+loadHistory();
+</script>
 </body>
 </html>
