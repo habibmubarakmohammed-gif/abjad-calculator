@@ -5,23 +5,135 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>MUBARAK ABJAD SHAIKH</title>
 
-<!-- PLACE YOUR CSS HERE -->
-<!-- This document contains a starter upgraded version.
-Add further features such as PDF export, WhatsApp sharing,
-progress pages and sound effects as needed. -->
+<style>
+body{
+    margin:0;
+    padding:20px;
+    font-family:'Segoe UI',sans-serif;
+    background:linear-gradient(135deg,#0f172a,#1e293b);
+    color:white;
+    min-height:100vh;
+}
+
+h1{
+    text-align:center;
+    color:#facc15;
+    margin-bottom:5px;
+}
+
+p{
+    text-align:center;
+    color:#cbd5e1;
+}
+
+input{
+    width:100%;
+    max-width:400px;
+    display:block;
+    margin:10px auto;
+    padding:14px;
+    border:none;
+    border-radius:12px;
+    font-size:16px;
+    background:#1e293b;
+    color:white;
+}
+
+button{
+    display:block;
+    margin:20px auto;
+    padding:14px 30px;
+    border:none;
+    border-radius:12px;
+    background:linear-gradient(45deg,#22c55e,#16a34a);
+    color:white;
+    font-size:16px;
+    font-weight:bold;
+    cursor:pointer;
+    transition:0.3s;
+}
+
+button:hover{
+    transform:scale(1.05);
+}
+
+#result{
+    max-width:500px;
+    margin:20px auto;
+}
+
+#result div{
+    background:#1e293b;
+    padding:12px;
+    margin:10px 0;
+    border-radius:12px;
+    border-left:4px solid #facc15;
+    animation:fadeIn 0.5s ease;
+}
+
+#history{
+    max-width:500px;
+    margin:20px auto;
+}
+
+#history div{
+    background:#111827;
+    padding:10px;
+    margin:8px 0;
+    border-radius:10px;
+    border-left:3px solid #22c55e;
+}
+
+@keyframes fadeIn{
+    from{
+        opacity:0;
+        transform:translateY(10px);
+    }
+    to{
+        opacity:1;
+        transform:translateY(0);
+    }
+}
+</style>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
 </head>
 <body>
 
 <h1>MUBARAK ABJAD SHAIKH</h1>
-<p>Contact: habibmubarakmohammed@gmail.com</p>
+
+<p>
+Contact:
+habibmubarakmohammed@gmail.com
+</p>
 
 <input id="name" placeholder="Enter Name">
 <input id="mother" placeholder="Mother Name">
 
-<button onclick="calculate()">Calculate</button>
+<button onclick="calculate()">
+Calculate
+</button>
 
 <div id="result"></div>
+
+<button onclick="copyResult()">
+📋 Copy
+</button>
+
+<button onclick="shareWhatsApp()">
+📱 WhatsApp
+</button>
+
+<button onclick="downloadPDF()">
+📄 PDF
+</button>
+
+<h3 style="text-align:center;">
+History
+</h3>
+
+<div id="history"></div>
 
 <script>
 
@@ -33,44 +145,149 @@ const abjad = {
 };
 
 const englishMap = {
-a:"ا", b:"ب", c:"ك", d:"د", e:"ا",
-f:"ف", g:"ج", h:"ه", i:"ي", j:"ج",
-k:"ك", l:"ل", m:"م", n:"ن", o:"و",
-p:"ب", q:"ق", r:"ر", s:"س", t:"ت",
-u:"و", v:"ف", w:"و", x:"كس", y:"ي", z:"ز"
+a:"ا",
+b:"ب",
+c:"ك",
+d:"د",
+e:"ا",
+f:"ف",
+g:"ج",
+h:"ه",
+i:"ي",
+j:"ج",
+k:"ك",
+l:"ل",
+m:"م",
+n:"ن",
+o:"و",
+p:"ب",
+q:"ق",
+r:"ر",
+s:"س",
+t:"ت",
+u:"و",
+v:"ف",
+w:"و",
+x:"كس",
+y:"ي",
+z:"ز"
 };
 
 function convertEnglishToArabic(text){
- let result="";
- for(let ch of text.toLowerCase()){
-   result += englishMap[ch] || "";
- }
- return result;
+
+let result="";
+
+for(let ch of text.toLowerCase()){
+result += englishMap[ch] || "";
+}
+
+return result;
+
 }
 
 function calcWord(word){
- if(/[a-zA-Z]/.test(word)){
-   word = convertEnglishToArabic(word);
- }
- let sum=0;
- for(let ch of word){
-   sum += abjad[ch] || 0;
- }
- return sum;
+
+if(/[a-zA-Z]/.test(word)){
+word = convertEnglishToArabic(word);
+}
+
+let sum = 0;
+
+for(let ch of word){
+sum += abjad[ch] || 0;
+}
+
+return sum;
+
 }
 
 function calculate(){
- let nameVal = calcWord(document.getElementById("name").value);
- let motherVal = calcWord(document.getElementById("mother").value);
- let combined = nameVal + motherVal;
 
- document.getElementById("result").innerHTML = `
- <div>Name Value: ${nameVal}</div>
- <div>Mother Value: ${motherVal}</div>
- <div>Combined Value: ${combined}</div>
- <div>🔒 Advanced Interpretation Locked</div>
- <div>Contact: habibmubarakmohammed@gmail.com</div>`;
+let nameVal =
+calcWord(
+document.getElementById("name").value
+);
+
+let motherVal =
+calcWord(
+document.getElementById("mother").value
+);
+
+let combined =
+nameVal + motherVal;
+
+document.getElementById("result").innerHTML = `
+<div>Name Value: ${nameVal}</div>
+<div>Mother Value: ${motherVal}</div>
+<div>Combined Value: ${combined}</div>
+<div>🔒 Advanced Interpretation Locked</div>
+<div>Contact: habibmubarakmohammed@gmail.com</div>
+`;
+
+let historyDiv =
+document.getElementById("history");
+
+historyDiv.innerHTML += `
+<div>
+${document.getElementById("name").value}
++
+${document.getElementById("mother").value}
+=
+${combined}
+</div>
+`;
+
 }
+
+function copyResult(){
+
+navigator.clipboard.writeText(
+document.getElementById("result").innerText
+);
+
+alert("Copied Successfully");
+
+}
+
+function shareWhatsApp(){
+
+let text = encodeURIComponent(
+document.getElementById("result").innerText
+);
+
+window.open(
+"https://wa.me/?text=" + text
+);
+
+}
+
+async function downloadPDF(){
+
+const { jsPDF } = window.jspdf;
+
+const doc = new jsPDF();
+
+doc.text(
+document.getElementById("result").innerText,
+10,
+20
+);
+
+doc.save("abjad-result.pdf");
+
+}
+
+document.getElementById("name")
+.addEventListener(
+"input",
+calculate
+);
+
+document.getElementById("mother")
+.addEventListener(
+"input",
+calculate
+);
 
 </script>
 
