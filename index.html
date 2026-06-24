@@ -1,68 +1,106 @@
-DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MUBARAK ABJAD SHAIKH - Version 1</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MUBARAK ABJAD SHAIKH V2</title>
 <style>
-body{font-family:Arial,sans-serif;background:#111;color:#fff;margin:0;padding:20px}
-.container{max-width:900px;margin:auto}
-input,button{padding:10px;margin:5px;width:100%}
-.card{background:#222;padding:15px;border-radius:10px;margin-top:15px}
+:root{--bg:#0f172a;--card:#1e293b;--text:#fff}
+.light{--bg:#f5f5f5;--card:#fff;--text:#111}
+body{background:var(--bg);color:var(--text);font-family:Arial;margin:0;padding:20px}
+.container{max-width:1000px;margin:auto}
+.card{background:var(--card);padding:15px;border-radius:12px;margin:10px 0}
+input,button{padding:12px;margin:5px;width:100%}
+table{width:100%;border-collapse:collapse}
+td,th{border:1px solid #777;padding:8px}
 </style>
 </head>
 <body>
 <div class="container">
 <h1>MUBARAK ABJAD SHAIKH</h1>
 
-<input id="name" placeholder="Enter Name">
-<input id="mother" placeholder="Enter Mother Name">
-
+<div class="card">
+<input id="name" placeholder="Name">
+<input id="mother" placeholder="Mother Name">
 <button onclick="calculate()">Calculate</button>
-<button onclick="saveResult()">Save Result</button>
-<button onclick="window.print()">Print</button>
+<button onclick="copyResult()">Copy Result</button>
+<button onclick="toggleTheme()">Dark/Light</button>
+<button onclick="exportData()">Export JSON</button>
+</div>
 
 <div id="result" class="card"></div>
-<div id="history" class="card"></div>
+
+<div class="card">
+<h3>History</h3>
+<table>
+<thead><tr><th>Name</th><th>Mother</th><th>Total</th></tr></thead>
+<tbody id="historyBody"></tbody>
+</table>
+</div>
 </div>
 
 <script>
-const abjad={
-'ا':1,'ب':2,'ج':3,'د':4,'ه':5,'و':6,'ز':7,'ح':8,'ط':9,
-'ي':10,'ك':20,'ل':30,'م':40,'ن':50,'س':60,'ع':70,
-'ف':80,'ص':90,'ق':100,'ر':200,'ش':300,'ت':400,
-'ث':500,'خ':600,'ذ':700,'ض':800,'ظ':900,'غ':1000
-};
+const abjad={ا:1,ب:2,ج:3,د:4,ه:5,و:6,ز:7,ح:8,ط:9,ي:10,ك:20,ل:30,م:40,ن:50,س:60,ع:70,ف:80,ص:90,ق:100,ر:200,ش:300,ت:400,ث:500,خ:600,ذ:700,ض:800,ظ:900,غ:1000};
 
-function calcWord(word){
- let sum=0;
- for(let c of word){ sum += abjad[c] || 0; }
- return sum;
+const map={a:"ا",b:"ب",c:"ك",d:"د",e:"ا",f:"ف",g:"ج",h:"ه",i:"ي",j:"ج",k:"ك",l:"ل",m:"م",n:"ن",o:"و",p:"ب",q:"ق",r:"ر",s:"س",t:"ت",u:"و",v:"ف",w:"و",x:"كس",y:"ي",z:"ز"};
+
+function transliterate(t){
+ let r="";
+ for(let c of t.toLowerCase()) r+=map[c]||c;
+ return r;
+}
+
+function calc(v){
+ if(/[a-z]/i.test(v)) v=transliterate(v);
+ let s=0;
+ for(let c of v) s+=abjad[c]||0;
+ return s;
 }
 
 function calculate(){
- let n=document.getElementById('name').value;
- let m=document.getElementById('mother').value;
- let total=calcWord(n)+calcWord(m);
+ let n=name.value;
+ let m=mother.value;
+ let nv=calc(n);
+ let mv=calc(m);
+ let total=nv+mv;
 
- document.getElementById('result').innerHTML=
- '<h3>Result</h3>'+
- '<p>Name Value: '+calcWord(n)+'</p>'+
- '<p>Mother Value: '+calcWord(m)+'</p>'+
- '<p>Total: '+total+'</p>';
-}
+ result.innerHTML=`
+ <h2>Result</h2>
+ <p>Name Value: ${nv}</p>
+ <p>Mother Value: ${mv}</p>
+ <p>Total: ${total}</p>
+ <p>Transliterated Name: ${transliterate(n)}</p>`;
 
-function saveResult(){
- let data=document.getElementById('result').innerText;
- localStorage.setItem('abjad_last',data);
+ let h=JSON.parse(localStorage.getItem("abjadHistory")||"[]");
+ h.push({n,m,total});
+ localStorage.setItem("abjadHistory",JSON.stringify(h));
  loadHistory();
 }
 
 function loadHistory(){
- document.getElementById('history').innerHTML =
- '<h3>Saved Result</h3><pre>' +
- (localStorage.getItem('abjad_last')||'No saved result') +
- '</pre>';
+ let h=JSON.parse(localStorage.getItem("abjadHistory")||"[]");
+ historyBody.innerHTML="";
+ h.reverse().slice(0,20).forEach(x=>{
+ historyBody.innerHTML+=`<tr><td>${x.n}</td><td>${x.m}</td><td>${x.total}</td></tr>`;
+ });
+}
+
+function copyResult(){
+ navigator.clipboard.writeText(result.innerText);
+ alert("Copied");
+}
+
+function toggleTheme(){
+ document.body.classList.toggle("light");
+}
+
+function exportData(){
+ let data=localStorage.getItem("abjadHistory")||"[]";
+ let blob=new Blob([data],{type:"application/json"});
+ let a=document.createElement("a");
+ a.href=URL.createObjectURL(blob);
+ a.download="abjad-history.json";
+ a.click();
 }
 
 loadHistory();
