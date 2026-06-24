@@ -1,110 +1,30 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Abjad Master Pro</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MUBARAK ABJAD SHAIKH</title>
 
-<style>
-body {
-  margin: 0;
-  font-family: Arial, sans-serif;
-  background: radial-gradient(circle at top, #0b0f2a, #000);
-  color: #fff;
-  overflow-x: hidden;
-}
+<!-- PLACE YOUR CSS HERE -->
+<!-- This document contains a starter upgraded version.
+Add further features such as PDF export, WhatsApp sharing,
+progress pages and sound effects as needed. -->
 
-/* Stars */
-.star {
-  position: absolute;
-  width: 2px;
-  height: 2px;
-  background: white;
-  border-radius: 50%;
-  animation: twinkle 2s infinite;
-}
-
-@keyframes twinkle {
-  0%,100% {opacity:0.2;}
-  50% {opacity:1;}
-}
-
-.container {
-  max-width: 900px;
-  margin: auto;
-  padding: 20px;
-  text-align: center;
-}
-
-h1 {
-  color: gold;
-  text-shadow: 0 0 10px gold;
-}
-
-input {
-  width: 80%;
-  padding: 10px;
-  margin: 10px;
-  border-radius: 10px;
-  border: none;
-}
-
-button {
-  padding: 10px 20px;
-  background: gold;
-  border: none;
-  border-radius: 10px;
-  cursor: pointer;
-  font-weight: bold;
-}
-
-.card {
-  background: rgba(255,255,255,0.05);
-  padding: 15px;
-  margin: 10px;
-  border-radius: 15px;
-  box-shadow: 0 0 10px rgba(255,215,0,0.3);
-}
-
-.lang {
-  margin-top: 10px;
-  cursor: pointer;
-  color: cyan;
-}
-</style>
 </head>
-
 <body>
 
-<div id="stars"></div>
+<h1>MUBARAK ABJAD SHAIKH</h1>
+<p>Contact: habibmubarakmohammed@gmail.com</p>
 
-<div class="container">
+<input id="name" placeholder="Enter Name">
+<input id="mother" placeholder="Mother Name">
 
-<h1>ABJAD MASTER PRO</h1>
-<div class="lang" onclick="toggleLang()">EN / العربية</div>
-
-<input id="name" placeholder="Enter Your Name / اسمك">
-<input id="mother" placeholder="Mother Name / اسم الأم">
-
-<br>
-<button onclick="calculate()">CALCULATE</button>
+<button onclick="calculate()">Calculate</button>
 
 <div id="result"></div>
 
-</div>
-
 <script>
-// ---------- MYSTICAL STARS ----------
-for(let i=0;i<80;i++){
-  let s=document.createElement("div");
-  s.className="star";
-  s.style.top=Math.random()*100+"vh";
-  s.style.left=Math.random()*100+"vw";
-  s.style.animationDuration=(Math.random()*3+1)+"s";
-  document.body.appendChild(s);
-}
 
-// ---------- ABJAD MAP ----------
 const abjad = {
 ا:1,ب:2,ج:3,د:4,ه:5,و:6,ز:7,ح:8,ط:9,
 ي:10,ك:20,ل:30,م:40,ن:50,س:60,ع:70,
@@ -112,86 +32,46 @@ const abjad = {
 ث:500,خ:600,ذ:700,ض:800,ظ:900,غ:1000
 };
 
-function calcWord(word){
-  let sum=0;
-  for(let ch of word){
-    sum += abjad[ch] || 0;
-  }
-  return sum;
+const englishMap = {
+a:"ا", b:"ب", c:"ك", d:"د", e:"ا",
+f:"ف", g:"ج", h:"ه", i:"ي", j:"ج",
+k:"ك", l:"ل", m:"م", n:"ن", o:"و",
+p:"ب", q:"ق", r:"ر", s:"س", t:"ت",
+u:"و", v:"ف", w:"و", x:"كس", y:"ي", z:"ز"
+};
+
+function convertEnglishToArabic(text){
+ let result="";
+ for(let ch of text.toLowerCase()){
+   result += englishMap[ch] || "";
+ }
+ return result;
 }
 
-// ---------- BURJ ----------
-const burj = [
-"Aries الحمل","Taurus الثور","Gemini الجوزاء",
-"Cancer السرطان","Leo الأسد","Virgo السنبلة",
-"Libra الميزان","Scorpio العقرب","Sagittarius القوس",
-"Capricorn الجدي","Aquarius الدلو","Pisces الحوت"
-];
-
-const element = [
-"Fire النار","Earth التراب","Air الهواء","Water الماء"
-];
-
-const planet = [
-"Mars المريخ","Venus الزهرة","Mercury عطارد",
-"Moon القمر","Sun الشمس","Mercury عطارد",
-"Venus الزهرة","Mars المريخ","Jupiter المشتري",
-"Saturn زحل","Saturn زحل","Jupiter المشتري"
-];
+function calcWord(word){
+ if(/[a-zA-Z]/.test(word)){
+   word = convertEnglishToArabic(word);
+ }
+ let sum=0;
+ for(let ch of word){
+   sum += abjad[ch] || 0;
+ }
+ return sum;
+}
 
 function calculate(){
+ let nameVal = calcWord(document.getElementById("name").value);
+ let motherVal = calcWord(document.getElementById("mother").value);
+ let combined = nameVal + motherVal;
 
-let name = document.getElementById("name").value;
-let mother = document.getElementById("mother").value;
-
-let nameVal = calcWord(name);
-let motherVal = calcWord(mother);
-
-let total = nameVal;
-
-// BURJ
-let b = (nameVal % 12);
-
-// ELEMENT
-let e = Math.floor(b/3);
-
-// PLANET
-let p = b;
-
-// FATIHA KEY
-let combined = nameVal + motherVal;
-let key = (combined % 7) + 1;
-
-let verses = [
-"Bismillah",
-"Alhamdulillahi Rabbil Alamin",
-"Ar-Rahman Ar-Rahim",
-"Maliki Yawmid-Din",
-"Iyyaka Na'budu",
-"Ihdinas Siratal Mustaqim",
-"Siratal Ladhina An'amta Alayhim"
-];
-
-document.getElementById("result").innerHTML = `
-<div class="card">Name Value: ${nameVal}</div>
-<div class="card">Mother Value: ${motherVal}</div>
-
-<div class="card">Burj: ${burj[b]}</div>
-<div class="card">Element: ${element[e]}</div>
-<div class="card">Planet: ${planet[p]}</div>
-
-<div class="card">Fatihah Key: ${key}</div>
-<div class="card">${verses[key-1]}</div>
-`;
-
+ document.getElementById("result").innerHTML = `
+ <div>Name Value: ${nameVal}</div>
+ <div>Mother Value: ${motherVal}</div>
+ <div>Combined Value: ${combined}</div>
+ <div>🔒 Advanced Interpretation Locked</div>
+ <div>Contact: habibmubarakmohammed@gmail.com</div>`;
 }
 
-// ---------- LANGUAGE TOGGLE ----------
-let lang="en";
-function toggleLang(){
-lang = lang==="en"?"ar":"en";
-alert("Language switched (UI demo)");
-}
 </script>
 
 </body>
